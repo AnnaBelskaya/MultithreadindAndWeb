@@ -80,7 +80,10 @@ public class Gallery extends Application {
         close.setMinWidth(50);
         close.setTextFill(Color.LIGHTGRAY);
         close.setStyle("-fx-font-size: 12pt;");
-        close.setOnAction(event -> stage.close());
+        close.setOnAction(event -> {
+            userInterface.stopSlides();
+            stage.close();
+        });
 
         HBox hBox = new HBox(refresh, url, addImage, slideshow, close);
         hBox.setSpacing(50);

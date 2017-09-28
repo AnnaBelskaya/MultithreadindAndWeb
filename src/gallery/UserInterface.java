@@ -1,8 +1,11 @@
 package gallery;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressIndicator;
+import javafx.util.Duration;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,11 +99,21 @@ public class UserInterface {
             slides = !slides;
             slideshow.setText("Stop");
             new Thread(() -> {
-                for (int i = 0; i < myImagesList.size(); i++) {
+                int i = -1;
+                while (!slides) {
+                    if (++i==myImagesList.size())
+                        i=0;
                     final int INDEX = i;
+
+                    FadeTransition fadeIn = new FadeTransition(Duration.millis(3000),myImagesList.get(INDEX).getFullSize());
+                    fadeIn.setFromValue(0.0);
+                    fadeIn.setToValue(1.0);
+                    fadeIn.play();
+
                     Platform.runLater(()->root.setCenter(myImagesList.get(INDEX).getFullSize()));
+
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -111,5 +124,9 @@ public class UserInterface {
             slideshow.setText("Slideshow");
             root.setCenter(scrollPane);
         }
+    }
+
+    public void stopSlides(){
+        slides = true;
     }
 }

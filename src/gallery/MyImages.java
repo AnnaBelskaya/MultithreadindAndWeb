@@ -48,7 +48,6 @@ public class MyImages {
     }
 
     public ImageView getFullSize() {
-        root.setCenter(fullSize);
         return fullSize;
     }
 }
