@@ -19,14 +19,14 @@ public class FIleUtils {
 
     private FIleUtils(){}
 
-    public static List<Image> load() {
-        List<Image> imageList = new ArrayList<>();
+    public static List<String> load() {
+        List<String> urlsList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file_name))) {
             String line;
             while ((line = br.readLine()) != null) {
                 final String LINE = line;
                 threads.submit(()->{
-                    imageList.add(new Image(LINE));
+                    urlsList.add(LINE);
                 });
             }
             br.close();
@@ -34,7 +34,7 @@ public class FIleUtils {
             e.printStackTrace();
         }
         threads.shutdown();
-        return imageList;
+        return urlsList;
     }
 
     public static void add(String url) throws ExecutionException, InterruptedException {

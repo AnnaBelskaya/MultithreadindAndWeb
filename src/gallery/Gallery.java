@@ -20,18 +20,19 @@ public class Gallery extends Application {
     public static BorderPane root = new BorderPane();
     public static ScrollPane scrollPane = new ScrollPane();
     public static TilePane tilePane = new TilePane();
-    public static JFXButton delete = new JFXButton("Delete");
+    public static JFXButton slideshow = new JFXButton("Slideshow");
 
     @Override
     public void start(Stage stage) throws Exception {
         UserInterface userInterface = new UserInterface();
         tilePane.setPrefColumns(5);
         tilePane.setPadding(new Insets(10, 10, 10, 10));
-        tilePane.setVgap(5);
-        tilePane.setHgap(5);
+        tilePane.setVgap(10);
+        tilePane.setHgap(10);
         scrollPane.setContent(tilePane);
         root.setStyle("-fx-background-color: black;");
 
+        //set elements
 
         JFXTextField url = new JFXTextField();
         url.setPromptText("URL");
@@ -42,11 +43,6 @@ public class Gallery extends Application {
         url.setMinWidth(300);
         url.setTranslateY(15);
 
-        delete.setStyle("-fx-font-size: 12pt;");
-        delete.setTextFill(Color.RED);
-        delete.setDisable(true);
-        delete.setMinHeight(50);
-
         JFXButton refresh = new JFXButton("Refresh");
         refresh.setStyle("-fx-font-size: 12pt;");
         refresh.setTextFill(Color.LIGHTGRAY);
@@ -54,19 +50,12 @@ public class Gallery extends Application {
         refresh.setOnAction(event -> {
             tilePane.getChildren().clear();
             try {
-                userInterface.show();
+                userInterface.showGallery();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
 
-        JFXButton close = new JFXButton("Exit");
-        close.setMinHeight(50);
-        close.setMinWidth(50);
-        close.setTextFill(Color.LIGHTGRAY);
-        close.setStyle("-fx-font-size: 12pt;");
-        close.setOnAction(event -> stage.close());
-        
         JFXButton addImage = new JFXButton("Add image");
         addImage.setMinHeight(50);
         addImage.setMinWidth(50);
@@ -74,25 +63,36 @@ public class Gallery extends Application {
         addImage.setStyle("-fx-font-size: 12pt;");
         addImage.setOnAction(event -> {
             try {
-                userInterface.addToList(url.getText());
+                userInterface.addNewImage(url.getText());
                 url.clear();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         });
 
+        slideshow.setStyle("-fx-font-size: 12pt;");
+        slideshow.setTextFill(Color.LIGHTGRAY);
+        slideshow.setMinHeight(50);
+        slideshow.setOnAction(event -> userInterface.slideshow());
 
-        HBox hBox = new HBox(refresh, url, addImage, delete, close);
-        hBox.setSpacing(100);
+        JFXButton close = new JFXButton("Exit");
+        close.setMinHeight(50);
+        close.setMinWidth(50);
+        close.setTextFill(Color.LIGHTGRAY);
+        close.setStyle("-fx-font-size: 12pt;");
+        close.setOnAction(event -> stage.close());
+
+        HBox hBox = new HBox(refresh, url, addImage, slideshow, close);
+        hBox.setSpacing(50);
         hBox.setTranslateX(50);
 
         root.setTop(hBox);
         root.setCenter(scrollPane);
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, 1200, 700);
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
-        userInterface.show();
+        userInterface.showGallery();
     }
 
     public static void main(String[] args) {
