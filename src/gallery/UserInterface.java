@@ -16,7 +16,7 @@ public class UserInterface {
     private Random r = new Random();
     private List<String> urlsList;
     private List<String> loadedImages = new ArrayList<>();
-    private List<MyImage> imageList = new ArrayList<>();
+    private List<MyImages> myImagesList = new ArrayList<>();
 
     public UserInterface() throws IOException, ExecutionException, InterruptedException {
         urlsList = FIleUtils.load();
@@ -25,7 +25,7 @@ public class UserInterface {
     public void showGallery() throws IOException {
         tilePane.getChildren().clear();
         loadedImages.clear();
-        imageList.clear();
+        myImagesList.clear();
 
         new Thread(() -> {
             while (urlsList.size() < 30){
@@ -69,11 +69,11 @@ public class UserInterface {
         return new Task() {
             @Override
             protected Object call() throws Exception {
-                MyImage myImage = new MyImage(url);
+                MyImages myImages = new MyImages(url);
                 loadedImages.add(url);
-                imageList.add(myImage);
+                myImagesList.add(myImages);
                 Platform.runLater(() -> tilePane.getChildren()
-                        .add(myImage.getThumbnail()));
+                        .add(myImages.getThumbnail()));
                 return null;
             }
         };
@@ -82,12 +82,12 @@ public class UserInterface {
     public void addNewImage(String url) throws ExecutionException, InterruptedException {
         if (url.equals(""))
             return;
-        MyImage myImage = new MyImage(url);
+        MyImages myImages = new MyImages(url);
         urlsList.add(url);
         loadedImages.add(url);
-        imageList.add(myImage);
+        myImagesList.add(myImages);
         tilePane.getChildren().remove(0);
-        tilePane.getChildren().add(myImage.getThumbnail());
+        tilePane.getChildren().add(myImages.getThumbnail());
         FIleUtils.add(url);
     }
 
@@ -96,11 +96,11 @@ public class UserInterface {
             slides = !slides;
             slideshow.setText("Stop");
             new Thread(() -> {
-                for (int i = 0; i < imageList.size(); i++) {
+                for (int i = 0; i < myImagesList.size(); i++) {
                     final int INDEX = i;
-                    Platform.runLater(()->root.setCenter(imageList.get(INDEX).getFullSize()));
+                    Platform.runLater(()->root.setCenter(myImagesList.get(INDEX).getFullSize()));
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
