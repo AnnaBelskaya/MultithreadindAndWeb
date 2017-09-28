@@ -1,6 +1,7 @@
 package gallery;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,11 +14,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class Gallery extends Application {
     public static BorderPane root = new BorderPane();
     public static ScrollPane scrollPane = new ScrollPane();
     public static TilePane tilePane = new TilePane();
+    public static JFXButton delete = new JFXButton("Delete");
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -28,6 +31,21 @@ public class Gallery extends Application {
         tilePane.setHgap(5);
         scrollPane.setContent(tilePane);
         root.setStyle("-fx-background-color: black;");
+
+
+        JFXTextField url = new JFXTextField();
+        url.setPromptText("URL");
+        url.setLabelFloat(true);
+        url.setFocusColor(Color.WHITE);
+        url.setUnFocusColor(Color.WHITE);
+        url.setStyle("-fx-text-fill: whitesmoke;");
+        url.setMinWidth(300);
+        url.setTranslateY(15);
+
+        delete.setStyle("-fx-font-size: 12pt;");
+        delete.setTextFill(Color.RED);
+        delete.setDisable(true);
+        delete.setMinHeight(50);
 
         JFXButton refresh = new JFXButton("Refresh");
         refresh.setStyle("-fx-font-size: 12pt;");
@@ -42,26 +60,39 @@ public class Gallery extends Application {
             }
         });
 
-        JFXButton close = new JFXButton("X");
+        JFXButton close = new JFXButton("Exit");
         close.setMinHeight(50);
         close.setMinWidth(50);
         close.setTextFill(Color.LIGHTGRAY);
-        close.setStyle("-fx-font-size: 16pt;");
+        close.setStyle("-fx-font-size: 12pt;");
         close.setOnAction(event -> stage.close());
+        
+        JFXButton addImage = new JFXButton("Add image");
+        addImage.setMinHeight(50);
+        addImage.setMinWidth(50);
+        addImage.setTextFill(Color.LIGHTGRAY);
+        addImage.setStyle("-fx-font-size: 12pt;");
+        addImage.setOnAction(event -> {
+            try {
+                userInterface.addToList(url.getText());
+                url.clear();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
-        HBox hBox = new HBox(refresh, close);
-        hBox.setSpacing(950);
-        hBox.setTranslateX(100);
+
+        HBox hBox = new HBox(refresh, url, addImage, delete, close);
+        hBox.setSpacing(100);
+        hBox.setTranslateX(50);
 
         root.setTop(hBox);
         root.setCenter(scrollPane);
-
         Scene scene = new Scene(root, 1200, 600);
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
-
-        userInterface.show();
         stage.show();
+        userInterface.show();
     }
 
     public static void main(String[] args) {
