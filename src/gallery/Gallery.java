@@ -24,7 +24,7 @@ public class Gallery extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        UserInterface userInterface = new UserInterface();
+        GalleryInterface userInterface = new GalleryInterface();
         tilePane.setPrefColumns(5);
         tilePane.setPadding(new Insets(10, 10, 10, 10));
         tilePane.setVgap(10);
